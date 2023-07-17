@@ -43,6 +43,12 @@ img {
 const BodyContentDiv = styled(HeadingDiv)`
 h2 {
   font-size: 2.5rem;
+};
+h3 {
+  font-size: 2rem;
+}
+span {
+  font-weight: bold;
 }
 `
 
