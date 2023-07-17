@@ -9,10 +9,12 @@ mainBody.style.background = "#bea483"
 
 const all = document.querySelectorAll("*")
 all.forEach((element) => {
-  element.style.border = ".2rem solid black"
+  element.style.maxWidth = "100%"
+  element.style.margin = "0 auto"
 })
 
 const HeadingDiv = styled.div`
+max-width: 100%;
 background-color: #ecdecc;
 border: .5rem solid  #a66122 ;
 border-radius: 1rem;
