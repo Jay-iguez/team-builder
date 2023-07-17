@@ -5,7 +5,7 @@ import { useState, useEffect} from 'react';
 import Form from './Form'
 
 const mainBody = document.querySelector("body")
-mainBody.style.background = "#bea483 "
+mainBody.style.background = "#bea483"
 
 const all = document.querySelectorAll("*")
 all.forEach((element) => {
