@@ -114,7 +114,7 @@ function App() {
     </div>
     </HeadingDiv>
     <BodyContentDiv>
-      <Form members={teamList} />
+      <Form members={teamList} setMembers={setTeamList} formValues={formValues} setFormValues={setFormValues} />
     </BodyContentDiv>
     </>
   );

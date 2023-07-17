@@ -10,7 +10,17 @@ margin: 1rem 5%;
 
 export default function Form(props) {
 
-    const { members } = props
+    const { members, setMembers, formValues, setFormValues } = props
+
+    function change(e) {
+        const {value, name} = e.target
+        setFormValues({...formValues, [name] : value})
+    }
+
+    function submit(e) {
+        e.preventDefault()
+        setMembers([...members, {name: formValues.name, email: formValues.email, role: formValues.role, breed: formValues.breed, temperament: formValues.temperament}])
+    }
 
     return (
         <>
@@ -38,14 +48,16 @@ export default function Form(props) {
         <p>To allow a more personal and fun experience, on sumbission of your application - it will be appended to the main list above to make you feel like you're apart of the team!</p>
         <p><span>Please note: </span>We are currently looking for the role of 'Barista' only. Also ask your owner for help if you don't know how to use a electronic device.</p>
         <FormMemberStyled>
-            <form>
+            <form onSubmit={(e) => submit(e)}>
             <label> Name:
                 <input 
                     name="name"
                     type="text"
                     id="nameselect"
-                    value=""
+                    value={formValues.name}
                     placeholder="Name"
+                    maxLength={50}
+                    onChange={(e) => change(e)}
                 />
             </label>
             <label> Email:
@@ -53,13 +65,14 @@ export default function Form(props) {
                     name="email"
                     type="text"
                     id="emailselect"
-                    value=""
+                    value={formValues.email}
                     placeholder="Email"
+                    onChange={(e) => change(e)}
                 />
             </label>
             <label> Role:
-                <select>
-                    <option>Choose:</option>
+                <select id="roleselect" name="role" onChange={(e) => change(e)}>
+                    <option value="">Choose:</option>
                     <option value="Barista">Barista</option>
                 </select>
             </label>
@@ -68,8 +81,9 @@ export default function Form(props) {
                     name="breed"
                     type="text"
                     id="breedselect"
-                    value=""
+                    value={formValues.breed}
                     placeholder="Mutt?"
+                    onChange={(e) => change(e)}
                 />
             </label>
             <label> Temperament:
@@ -77,8 +91,9 @@ export default function Form(props) {
                     name="temperament"
                     type="text"
                     id="breedselect"
-                    value=""
+                    value={formValues.temperament}
                     placeholder="Laidback"
+                    onChange={(e) => change(e)}
                 />
             </label>
             <label> Do you chew furniture?
@@ -89,6 +104,7 @@ export default function Form(props) {
                     value=""
                 />
             </label>
+            <input type='submit' />
         </form>
         </FormMemberStyled>
         </>
