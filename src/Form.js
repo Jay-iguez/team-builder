@@ -67,8 +67,8 @@ export default function Form(props) {
         }
         <h2>Application Submisson</h2>
         <h3>Please submit your info here: </h3>
-        <p>To allow a more personal and fun experience, on sumbission of your application - it will be appended to the main list above to make you feel like you're apart of the team!</p>
-        <p><span>Please note: </span>We are currently looking for the role of 'Barista' only. Also ask your owner for help if you don't know how to use a electronic device.</p>
+        <p>To allow a more personal and fun experience, on submission of your application - it will be appended to the main list above to make you feel like you're apart of the team!</p>
+        <p><span>Please note: </span>We are currently looking for the role of 'Barista' only. Also ask your owner for help if you don't know how to use an electronic device.</p>
         {
             !hasSubmit ? 
  
