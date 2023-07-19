@@ -95,7 +95,10 @@ const teamMembers = [
 
 function App() {
 
-  const [formValues, setFormValues] = useState({name: "", email: "", role: "", breed: "", temperament: ""})
+  const [formValues, setFormValues] = useState({name: "", email: "", role: "", breed: "", temperament: "", chew: false})
+  const [formErrors, setFormErrors] = useState({name: "", email: "", role: "", breed: "", temperament: "", chew: ""})
+  const [disabled, setDisabled] = useState(false)
+
   const [teamList, setTeamList] = useState(teamMembers)
 
 
@@ -116,7 +119,7 @@ function App() {
     </div>
     </HeadingDiv>
     <BodyContentDiv>
-      <Form members={teamList} setMembers={setTeamList} formValues={formValues} setFormValues={setFormValues} />
+      <Form members={teamList} setMembers={setTeamList} formValues={formValues} setFormValues={setFormValues} formErrors={formErrors} setFormErrors={setFormErrors} disabled={disabled} setDisabled={setDisabled} />
     </BodyContentDiv>
     </>
   );

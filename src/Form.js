@@ -1,5 +1,7 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import styled from 'styled-components'
+import * as Yup from 'yup'
+import formSchema from "./formSchema"
 
 const FormMemberStyled = styled.div`
 background-color:  #c9c0b5;
@@ -27,20 +29,39 @@ button {
 }
 `
 let hasSubmit = false
+let chewed = false
 
 export default function Form(props) {
 
-    const { members, setMembers, formValues, setFormValues } = props
+    const { members, setMembers, formValues, setFormValues, formErrors, setFormErrors, disabled, setDisabled } = props
+
+
+    function validate(name, value) {
+        Yup.reach(formSchema, name)
+        .validate(value)
+        .then(() => setFormErrors({...formErrors, [name]: ""}))
+        .catch(err => setFormErrors({...formErrors, [name]: err.errors[0]}))
+    }
+
+    useEffect(() => {
+        formSchema.isValid(formValues).then(valid => setDisabled(!valid))
+    }, [formValues])
+
 
     function change(e) {
-        const {value, name} = e.target
-        setFormValues({...formValues, [name] : value})
+        const {value, name, checked, type} = e.target
+        const typeOf = type === "checkbox" ? checked : value
+        validate(name, typeOf)
+        setFormValues({...formValues, [name] : typeOf})
+        if (type === "checkbox") {
+           chewed = !chewed
+        }
     }
 
     function submit(e) {
         e.preventDefault()
         setMembers([...members, {name: formValues.name, email: formValues.email, role: formValues.role, breed: formValues.breed, temperament: formValues.temperament}])
-        setFormValues({name: "", email: "", role: "", breed: "", temperament: ""})
+        setFormValues({name: "", email: "", role: "", breed: "", temperament: "", chew: ""})
         hasSubmit = true
     }
 
@@ -69,6 +90,14 @@ export default function Form(props) {
         <h3>Please submit your info here: </h3>
         <p>To allow a more personal and fun experience, on submission of your application - it will be appended to the main list above to make you feel like you're apart of the team!</p>
         <p><span>Please note: </span>We are currently looking for the role of 'Barista' only. Also ask your owner for help if you don't know how to use an electronic device.</p>
+
+        <FormMemberStyled>
+            {
+            Object.keys(formErrors).map(error => {
+               return <p>{formErrors[error]}</p>
+            })
+            }
+        </FormMemberStyled>
         {
             !hasSubmit ? 
  
@@ -81,10 +110,10 @@ export default function Form(props) {
                     id="nameselect"
                     value={formValues.name}
                     placeholder="Name"
-                    maxLength={30}
                     onChange={(e) => {
                         e.preventDefault()
                                 if (/^[a-zA-Z\s]+$/.test(e.target.value) || e.target.value === '') {
+                                    validate(e.target.name, e.target.value)
                                     setFormValues({ ...formValues, [e.target.name]: e.target.value });
                                 } 
                     }}
@@ -128,20 +157,26 @@ export default function Form(props) {
             </label>
             <label> Do you chew furniture?
                 <input 
-                    name=""
+                    name="chew"
                     type="checkbox"
                     id="chewselect"
-                    value=""
+                    checked={formValues.chew}
+                    onChange={(e) => change(e)}
                 />
             </label>
-            <button>Submit Your Info</button>
+            <button disabled={disabled}>Submit Your Info</button>
         </form>
         </FormMemberStyled>
-
             :
             <FormMemberStyled>
             <h2>Congratulations - You just successfully submitted your application!</h2>
             <p> We will be processing it shortly, and will email you back with your results. In the meantime - you can imagine already being on the team with your info now above. Thank you!</p>
+            {
+                chewed ? 
+                <p>Please note, should any workplace equipment need to be replaced due to "oral-inflicted" damage - you will be responsible for it. Thank you.</p>
+                :
+                <p>Glad to hear you don't have any bad chewing habits. We lost an espresso machine that way. Not fun.</p>
+            }
             </FormMemberStyled>
         }
         
