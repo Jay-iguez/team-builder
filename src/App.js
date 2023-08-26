@@ -3,6 +3,7 @@ import './App.css';
 import styled from 'styled-components'
 import { useState, useEffect} from 'react';
 import Form from './Form'
+import useForm from './useForm'
 
 const mainBody = document.querySelector("body")
 mainBody.style.background = "#bea483"
@@ -93,15 +94,21 @@ const teamMembers = [
 ];
 
 
+
 function App() {
 
-  const [formValues, setFormValues] = useState({name: "", email: "", role: "", breed: "", temperament: "", chew: false})
-  const [formErrors, setFormErrors] = useState({name: "", email: "", role: "", breed: "", temperament: "", chew: ""})
-  const [disabled, setDisabled] = useState(false)
-
+  const [formErrors, setFormErrors] = useState({name: "", email: "", role: "", breed: "", temperament: "", chew: ''})
+  const [disabled, setDisabled] = useState(true)
   const [teamList, setTeamList] = useState(teamMembers)
 
+  const [name, setName] = useForm('', formErrors, setFormErrors)
+  const [email, setEmail] = useForm('', formErrors, setFormErrors)
+  const [role, setRole] = useForm('', formErrors, setFormErrors)
+  const [breed, setBreed] = useForm('', formErrors, setFormErrors)
+  const [temperament, setTemperament] = useForm('', formErrors, setFormErrors)
+  const [chew, setChew] = useForm(false, formErrors, setFormErrors)
 
+  
   return (
     <>
     <HeadingDiv>
@@ -119,7 +126,26 @@ function App() {
     </div>
     </HeadingDiv>
     <BodyContentDiv>
-      <Form members={teamList} setMembers={setTeamList} formValues={formValues} setFormValues={setFormValues} formErrors={formErrors} setFormErrors={setFormErrors} disabled={disabled} setDisabled={setDisabled} />
+      <Form 
+      name={name} 
+      changeName={setName} 
+      email={email}
+      changeEmail={setEmail}
+      role={role}
+      changeRole={setRole}
+      breed={breed}
+      changeBreed={setBreed}
+      temperament={temperament}
+      changeTemperament={setTemperament}
+      chew={chew}
+      changeChew={setChew}
+      //
+      members={teamList} 
+      setMembers={setTeamList} 
+      formErrors={formErrors} 
+      setFormErrors={setFormErrors} 
+      disabled={disabled} 
+      setDisabled={setDisabled} />
     </BodyContentDiv>
     </>
   );

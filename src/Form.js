@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import styled from 'styled-components'
 import * as Yup from 'yup'
 import formSchema from "./formSchema"
+import { useForm } from "./useForm"
 
 const FormMemberStyled = styled.div`
 background-color:  #c9c0b5;
@@ -28,42 +29,50 @@ button {
     font-size: 2rem;
 }
 `
+
+let toChew = false
 let hasSubmit = false
-let chewed = false
 
 export default function Form(props) {
 
-    const { members, setMembers, formValues, setFormValues, formErrors, setFormErrors, disabled, setDisabled } = props
+    const { 
+        name, 
+        changeName, 
+        email, 
+        changeEmail, 
+        role, 
+        changeRole, 
+        temperament, 
+        changeTemperament, 
+        breed, 
+        changeBreed, 
+        chew, 
+        changeChew, members, setMembers, formErrors, disabled, setDisabled } = props
 
-
-    function validate(name, value) {
-        Yup.reach(formSchema, name)
-        .validate(value)
-        .then(() => setFormErrors({...formErrors, [name]: ""}))
-        .catch(err => setFormErrors({...formErrors, [name]: err.errors[0]}))
-    }
-
-    useEffect(() => {
-        formSchema.isValid(formValues).then(valid => setDisabled(!valid))
-    }, [formValues])
-
-
-    function change(e) {
-        const {value, name, checked, type} = e.target
-        const typeOf = type === "checkbox" ? checked : value
-        validate(name, typeOf)
-        setFormValues({...formValues, [name] : typeOf})
-        if (type === "checkbox") {
-           chewed = !chewed
-        }
-    }
 
     function submit(e) {
         e.preventDefault()
-        setMembers([...members, {name: formValues.name, email: formValues.email, role: formValues.role, breed: formValues.breed, temperament: formValues.temperament}])
-        setFormValues({name: "", email: "", role: "", breed: "", temperament: "", chew: ""})
+        setMembers([...members, {name: name, email: email, role: role, breed: breed, temperament: temperament}])
         hasSubmit = true
     }
+
+        useEffect(() => {
+            const formValues = {name, email, role, breed, temperament, chew}
+
+            formSchema.isValid(formValues)
+            .then((valid) => {
+                setDisabled(!valid)
+            })
+        }, [name, email, role, breed, temperament, chew])
+
+        useEffect(() => {
+            if (chew === true) {
+                toChew = false
+            } else if (chew === false) {
+                toChew = true
+            }
+        }, [chew])
+
 
     return (
         <>
@@ -102,21 +111,15 @@ export default function Form(props) {
             !hasSubmit ? 
  
             <FormMemberStyled>
-            <form onSubmit={(e) => submit(e)}>
+            <form onSubmit={submit}>
             <label> Name:
                 <input 
                     name="name"
                     type="text"
                     id="nameselect"
-                    value={formValues.name}
+                    value={name}
                     placeholder="Name"
-                    onChange={(e) => {
-                        e.preventDefault()
-                                if (/^[a-zA-Z\s]+$/.test(e.target.value) || e.target.value === '') {
-                                    validate(e.target.name, e.target.value)
-                                    setFormValues({ ...formValues, [e.target.name]: e.target.value });
-                                } 
-                    }}
+                    onChange={changeName}
                 />
             </label>
             <label> Email:
@@ -124,13 +127,13 @@ export default function Form(props) {
                     name="email"
                     type="email"
                     id="emailselect"
-                    value={formValues.email}
+                    value={email}
                     placeholder="Email"
-                    onChange={(e) => change(e)}
+                    onChange={changeEmail}
                 />
             </label>
             <label> Role:
-                <select id="roleselect" name="role" onChange={(e) => change(e)}>
+                <select id="roleselect" name="role" onChange={changeRole}>
                     <option value="">Choose:</option>
                     <option value="Barista">Barista</option>
                 </select>
@@ -140,9 +143,9 @@ export default function Form(props) {
                     name="breed"
                     type="text"
                     id="breedselect"
-                    value={formValues.breed}
+                    value={breed}
                     placeholder="Mutt?"
-                    onChange={(e) => change(e)}
+                    onChange={changeBreed}
                 />
             </label>
             <label> Temperament:
@@ -150,9 +153,9 @@ export default function Form(props) {
                     name="temperament"
                     type="text"
                     id="breedselect"
-                    value={formValues.temperament}
+                    value={temperament}
                     placeholder="Laidback"
-                    onChange={(e) => change(e)}
+                    onChange={changeTemperament}
                 />
             </label>
             <label> Do you chew furniture?
@@ -160,8 +163,8 @@ export default function Form(props) {
                     name="chew"
                     type="checkbox"
                     id="chewselect"
-                    checked={formValues.chew}
-                    onChange={(e) => change(e)}
+                    checked={chew}
+                    onChange={changeChew}
                 />
             </label>
             <button disabled={disabled}>Submit Your Info</button>
@@ -172,7 +175,7 @@ export default function Form(props) {
             <h2>Congratulations - You just successfully submitted your application!</h2>
             <p> We will be processing it shortly, and will email you back with your results. In the meantime - you can imagine already being on the team with your info now above. Thank you!</p>
             {
-                chewed ? 
+                !toChew ? 
                 <p>Please note, should any workplace equipment need to be replaced due to "oral-inflicted" damage - you will be responsible for it. Thank you.</p>
                 :
                 <p>Glad to hear you don't have any bad chewing habits. We lost an espresso machine that way. Not fun.</p>
