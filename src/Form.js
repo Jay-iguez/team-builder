@@ -1,8 +1,6 @@
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
 import styled from 'styled-components'
-import * as Yup from 'yup'
 import formSchema from "./formSchema"
-import { useForm } from "./useForm"
 
 const FormMemberStyled = styled.div`
 background-color:  #c9c0b5;
@@ -168,6 +166,12 @@ export default function Form(props) {
                 />
             </label>
             <button disabled={disabled}>Submit Your Info</button>
+            <br></br>
+            <br></br>
+            <button onClick={(e) => {
+                e.preventDefault()
+                localStorage.clear()
+                }}>Clear Login Storage</button>
         </form>
         </FormMemberStyled>
             :

@@ -1,9 +1,9 @@
 import * as Yup from 'yup'
-import { useState, useEffect } from 'react'
 import formSchema from './formSchema'
+import useLocalStorage from './useLocalStorage'
 
-export function useForm(intialValue, errors, setErrors) {
-    const [values, setValues] = useState(intialValue)
+export function useForm(key, intialValue, errors, setErrors) {
+    const [values, setValues] = useLocalStorage(key, intialValue)
 
     const validate = (name, value) => {
         Yup.reach(formSchema, name)
